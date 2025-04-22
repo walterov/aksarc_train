@@ -1,0 +1,27 @@
+name: Call Deploy AKS Arc Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      cluster-name:
+        description: 'Name of the AKS Arc cluster'
+        required: true
+      resource-group:
+        description: 'Azure Resource Group'
+        required: true
+      location:
+        description: 'Azure Local Environment'
+        required: true
+      k8s-version:
+        description: 'Kubernetes Version'
+        required: false
+        default: '1.30.4'
+
+jobs:
+  call-deploy:
+    uses: your-org/your-repo/.github/workflows/deploy-aksarc.yml@walterov-patch-1
+    with:
+      cluster-name: ${{ github.event.inputs.cluster-name }}
+      resource-group: ${{ github.event.inputs.resource-group }}
+      location: ${{ github.event.inputs.location }}
+      k8s-version: ${{ github.event.inputs.k8s-version }}
