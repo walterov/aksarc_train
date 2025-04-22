@@ -1,0 +1,51 @@
+name: Deploy AKS Arc Cluster on Azure Local
+
+on:
+  workflow_call:
+    inputs:
+      cluster-name:
+        required: true
+        type: string
+      resource-group:
+        required: true
+        type: string
+      location:
+        required: true
+        type: string
+      k8s-version:
+        required: false
+        type: string
+        default: "1.30.4"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create AKS Arc Cluster
+        run: |
+          az extension add --name aksarc
+          az aksarc create \
+            --name ${{ inputs.cluster-name }} \
+            --resource-group ${{ inputs.resource-group }} \
+            --location "azlocal://${{ inputs.location }}" \
+            --control-plane-node-count 1 \
+            --worker-node-count 1 \
+            --kubernetes-version "${{ inputs.k8s-version }}" \
+            --admin-username azureuser \
+            --generate-ssh-keys
+#            --ssh-public-key "$(cat ~/.ssh/id_rsa.pub)"
+
+#      - name: Get kubeconfig
+#        run: |
+#          az aksarc get-credentials \
+#            --name ${{ inputs.cluster-name }} \
+#            --resource-group ${{ inputs.resource-group }}
