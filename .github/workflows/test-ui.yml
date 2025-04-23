@@ -1,0 +1,14 @@
+name: Test UI
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'Message to print'
+        required: true
+
+jobs:
+  show-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello, ${{ github.event.inputs.message }}"
