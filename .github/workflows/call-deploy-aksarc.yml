@@ -25,6 +25,7 @@ jobs:
       
   call-deploy:
     uses: ./.github/workflows/deploy-aksarc.yml
+    needs: enable-ui
     with:
       cluster-name: ${{ github.event.inputs.cluster-name }}
       resource-group: ${{ github.event.inputs.resource-group }}
