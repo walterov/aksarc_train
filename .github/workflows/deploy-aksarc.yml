@@ -1,5 +1,5 @@
 name: Deploy AKS Arc on Azure Local
-
+run-name: ${{ github.actor }} is deploying an AKS Arc cluster 🚀
 on:
   workflow_call:
     inputs:
