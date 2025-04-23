@@ -19,7 +19,7 @@ on:
 
 jobs:
   call-deploy:
-    uses: walterov/aksarc_train/.github/workflows/deploy-aksarc.yml@walterov-patch-1
+    uses: ./.github/workflows/deploy-aksarc.yml
     with:
       cluster-name: ${{ github.event.inputs.cluster-name }}
       resource-group: ${{ github.event.inputs.resource-group }}
