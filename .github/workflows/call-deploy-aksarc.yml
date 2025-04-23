@@ -1,5 +1,5 @@
 name: Call Deploy AKS Arc Workflow
-
+run-name: ${{ github.actor }} is going to call deploy workflow
 on:
   workflow_dispatch:
     inputs:
