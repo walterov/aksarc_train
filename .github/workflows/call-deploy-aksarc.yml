@@ -18,6 +18,11 @@ on:
         default: '1.30.4'
 
 jobs:
+  enable-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Starting AKS Arc deployment via reusable workflow..."
+      
   call-deploy:
     uses: ./.github/workflows/deploy-aksarc.yml
     with:
