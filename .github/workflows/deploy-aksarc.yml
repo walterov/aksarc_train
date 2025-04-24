@@ -9,7 +9,10 @@ on:
       resource-group:
         required: true
         type: string
-      location:
+      custom-location:
+        required: true
+        type: string
+      vnet-id:
         required: true
         type: string
       k8s-version:
@@ -52,7 +55,8 @@ jobs:
           az aksarc create \
             --name ${{ inputs.cluster-name }} \
             --resource-group ${{ inputs.resource-group }} \
-            --location ${{ inputs.location }} \
+            --custom-location ${{ inputs.custom-location }} \
+            --vnet-id ${{ inputs.vnet-id }} \
             --control-plane-node-count 1 \
             --worker-node-count 1 \
             --kubernetes-version "${{ inputs.k8s-version }}" \
