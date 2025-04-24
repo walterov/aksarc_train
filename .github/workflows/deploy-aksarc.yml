@@ -84,14 +84,16 @@ jobs:
       - name: Deploy the microsoft.flux extension to the cluster and create the Flux configuration 
         run: |
           az k8s-configuration flux create \
-            -g flux-demo-rg \
-            -c flux-demo-arc \
-            -n cluster-config \
-            --namespace cluster-config \
-            -t connectedClusters \
+            --resource-group ${{ inputs.resource-group }} \
+            --cluster-name ${{ inputs.cluster-name }} \
+            --name ${{ inputs.cluster-config-name }} \
+            --namespace ${{ inputs.cluster-config-name }} \
+            --cluster-type connectedClusters \
             --scope cluster \
-            -u https://github.com/Azure/gitops-flux2-kustomize-helm-mt \
-            --branch main --kustomization name=infra path=./infrastructure prune=true --kustomization name=apps path=./apps/staging prune=true dependsOn=\["infra"\]
+            --url https://github.com/Azure/gitops-flux2-kustomize-helm-mt \
+            --branch main \
+            --kustomization name=infra path=./infrastructure prune=true \
+            --kustomization name=apps path=./apps/staging prune=true dependsOn=\["infra"\]
 
         
 #      - name: Get kubeconfig
