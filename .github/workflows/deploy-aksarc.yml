@@ -48,11 +48,11 @@ jobs:
 
       - name: Create AKS Arc Cluster
         run: |
-          az extension add --name aksarc-preview
+          az extension add --name aksarc
           az aksarc create \
             --name ${{ inputs.cluster-name }} \
             --resource-group ${{ inputs.resource-group }} \
-            --location "azlocal://${{ inputs.location }}" \
+            --location ${{ inputs.location }} \
             --control-plane-node-count 1 \
             --worker-node-count 1 \
             --kubernetes-version "${{ inputs.k8s-version }}" \
