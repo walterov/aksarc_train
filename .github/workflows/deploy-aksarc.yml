@@ -87,7 +87,7 @@ jobs:
             --resource-group ${{ inputs.resource-group }} \
             --cluster-name ${{ inputs.cluster-name }} \
             --name ${{ inputs.cluster-config-name }} \
-            --namespace ${{ inputs.cluster-config-name }} \
+            --namespace cluster-config \
             --cluster-type connectedClusters \
             --scope cluster \
             --url https://github.com/Azure/gitops-flux2-kustomize-helm-mt \
