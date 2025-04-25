@@ -86,11 +86,11 @@ jobs:
           az k8s-configuration flux create \
             --resource-group ${{ inputs.resource-group }} \
             --cluster-name ${{ inputs.cluster-name }} \
-            --name ${{ inputs.cluster-config-name }} \
+            --name cluster-config \
             --namespace cluster-config \
             --cluster-type connectedClusters \
             --scope cluster \
-            --url https://github.com/Azure/gitops-flux2-kustomize-helm-mt \
+            --url https://github.com/walterov/gitops-flux2-kustomize-helm-mt \
             --branch main \
             --kustomization name=infra path=./infrastructure prune=true \
             --kustomization name=apps path=./apps/staging prune=true dependsOn=\["infra"\]
