@@ -63,6 +63,8 @@ jobs:
             --vnet-id ${{ inputs.vnet-id }} \
             --control-plane-count 1 \
             --node-count 1 \
+            --node-vm-size Standard_NC4_A2 \
+            --enable-ai-toolchain-operator \
             --kubernetes-version "${{ inputs.k8s-version }}" \
             --generate-ssh-keys \
             --aad-admin-group-object-ids "be0c17dc-9a37-48c5-9691-751a27a4c1b9,f5157bd2-8ce4-48b6-82df-69b9de7540a9,af0ac67a-fcb3-4c19-a950-c32f938ee163"
