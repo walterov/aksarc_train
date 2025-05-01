@@ -1,5 +1,5 @@
 name: Deploy AKS Arc on Azure Local
-run-name: ${{ github.actor }} is deploying an AKS Arc cluster 🚀
+run-name: ${{ github.actor }} is deploying an AKS Arc cluster configured for AI and Flux 🚀
 on:
   workflow_call:
     inputs:
@@ -68,7 +68,6 @@ jobs:
             --kubernetes-version "${{ inputs.k8s-version }}" \
             --generate-ssh-keys \
             --aad-admin-group-object-ids "be0c17dc-9a37-48c5-9691-751a27a4c1b9,f5157bd2-8ce4-48b6-82df-69b9de7540a9,af0ac67a-fcb3-4c19-a950-c32f938ee163"
-#            --ssh-public-key "$(cat ~/.ssh/id_rsa.pub)"
 
   label-gpu-nodes:
     name: Label GPU Nodes
@@ -131,6 +130,7 @@ jobs:
   deploy-flex-extension:
     name: Deploy and Configure Flex Repo
     runs-on: ubuntu-latest
+    needs: [deploy-aks-cluster]  # Ensure this runs after AKS deployment job
 
     steps:
       - name: Registration of GitOps/Flex Azure resource providers
@@ -160,10 +160,5 @@ jobs:
             --kustomization name=infra path=./infrastructure prune=true \
             --kustomization name=apps path=./apps/staging prune=true dependsOn=\["infra"\]
 
-        
-#      - name: Get kubeconfig
-#        run: |
-#          az aksarc get-credentials \
-#            --name ${{ inputs.cluster-name }} \
-#            --resource-group ${{ inputs.resource-group }}
+
 
