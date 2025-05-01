@@ -30,7 +30,7 @@ on:
         required: true
 
 jobs:
-  deploy:
+  deploy-aks-cluster:
     runs-on: ubuntu-latest
 
     steps:
@@ -70,6 +70,58 @@ jobs:
             --aad-admin-group-object-ids "be0c17dc-9a37-48c5-9691-751a27a4c1b9,f5157bd2-8ce4-48b6-82df-69b9de7540a9,af0ac67a-fcb3-4c19-a950-c32f938ee163"
 #            --ssh-public-key "$(cat ~/.ssh/id_rsa.pub)"
 
+  label-gpu-nodes:
+    name: Label GPU Nodes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Azure authentication
+        uses: azure/login@v2
+        with:
+          creds: |
+            {
+              "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
+              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
+              "tenantId": "${{ secrets.AZURE_TENANT_ID }}",
+              "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+            }
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ secrets.AKS_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Label GPU-enabled nodes
+        run: |
+          #!/bin/bash
+          set -e
+
+          echo "Discovering GPU-enabled nodes..."
+          GPU_NODES=$(kubectl get nodes -o json | jq -r '.items[] | select(.status.allocatable["nvidia.com/gpu"]) | .metadata.name')
+
+          if [ -z "$GPU_NODES" ]; then
+            echo "No GPU-enabled nodes found."
+            exit 0
+          fi
+
+          for NODE in $GPU_NODES; do
+            echo "Labeling node $NODE with app=llm-inference..."
+            kubectl label node "$NODE" app=llm-inference --overwrite
+          done
+
+          echo "Labeling complete."
+
+  deploy-flex-extension:
+    name: Deploy and Configure Flex Repo
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Registration of GitOps/Flex Azure resource providers
         run: |
           az provider register --namespace Microsoft.Kubernetes --wait
