@@ -67,7 +67,7 @@ jobs:
             --enable-ai-toolchain-operator \
             --kubernetes-version "${{ inputs.k8s-version }}" \
             --generate-ssh-keys \
-            --aad-admin-group-object-ids ${{ secrets.AZURE_AD_ADMIN_GROUP_ID }} 
+            --aad-admin-group-object-ids "${{ secrets.AZURE_AD_ADMIN_GROUP_ID }}"
 
   label-gpu-nodes:
     name: Label GPU Nodes
