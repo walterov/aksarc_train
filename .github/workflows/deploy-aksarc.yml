@@ -53,6 +53,11 @@ jobs:
         run: |
           az upgrade
 
+      - name: Write SSH Public Key file
+        run: |
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+        shell: bash # Ensure bash is used for consistent behavior
+
       - name: Create AKS Arc Cluster
         run: |
           az extension add --name aksarc
@@ -66,7 +71,7 @@ jobs:
             --node-vm-size Standard_NC4_A2 \
             --enable-ai-toolchain-operator \
             --kubernetes-version "${{ inputs.k8s-version }}" \
-            --generate-ssh-keys \
+            --ssh-key-value ~/.ssh/id_rsa.pub \
             --aad-admin-group-object-ids "${{ secrets.AZURE_AD_ADMIN_GROUP_ID }}"
 
   label-gpu-nodes:
