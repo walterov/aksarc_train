@@ -55,6 +55,7 @@ jobs:
 
       - name: Write SSH Public Key file
         run: |
+          mkdir -p ~/.ssh/ # Create the .ssh directory if it doesn't exist
           echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
         shell: bash # Ensure bash is used for consistent behavior
 
