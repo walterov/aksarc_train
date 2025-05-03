@@ -71,7 +71,7 @@ jobs:
             --vnet-id ${{ inputs.vnet-id }} \
             --control-plane-count 1 \
             --node-count 1 \
-            --node-vm-size Standard_NC4_A2 \
+            --node-vm-size Standard_NC16_A16 \
             --enable-ai-toolchain-operator \
             --kubernetes-version "${{ inputs.k8s-version }}" \
             --ssh-key-value ~/.ssh/id_rsa.pub \
