@@ -75,7 +75,7 @@ jobs:
             --kubernetes-version "${{ inputs.k8s-version }}" \
             --ssh-key-value ~/.ssh/id_rsa.pub \
             --aad-admin-group-object-ids "${{ secrets.AZURE_AD_ADMIN_GROUP_ID }}"
-#            --enable-ai-toolchain-operator 
+            --enable-ai-toolchain-operator 
             
 
   label-gpu-nodes:
