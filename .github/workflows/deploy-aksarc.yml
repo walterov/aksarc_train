@@ -74,7 +74,7 @@ jobs:
             --node-vm-size Standard_NC16_A2 \
             --kubernetes-version "${{ inputs.k8s-version }}" \
             --ssh-key-value ~/.ssh/id_rsa.pub \
-            --aad-admin-group-object-ids "${{ secrets.AZURE_AD_ADMIN_GROUP_ID }}"
+            --aad-admin-group-object-ids "${{ secrets.AZURE_AD_ADMIN_GROUP_ID }}" \
             --enable-ai-toolchain-operator 
             
 
