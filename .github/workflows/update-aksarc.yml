@@ -1,4 +1,4 @@
-name: Upgrade AKS Arc Cluster Workflow
+name: Update AKS Arc Cluster Configuration Workflow
 run-name: ${{ github.actor }} is going to call deploy workflow
 
 on:
@@ -44,10 +44,10 @@ jobs:
         run: |
           az upgrade --yes
 
-      - name: Upgrade AKS Arc Cluster
+      - name: Update AKS Arc Cluster
         run: |
           az extension add --name aksarc
-          az aksarc upgrade \
+          az aksarc update \
             --name ${{ inputs.cluster-name }} \
             --resource-group ${{ inputs.resource-group }} \
             --kubernetes-version "${{ inputs.k8s-version }}"    
