@@ -2,12 +2,12 @@
 set -e
 
 # GitHub credentials
-REPO_URL="https://github.com/walterov/gitops-flux2-kustomize-helm-mt.git"
 REPO_DIR="gitops-flux2-kustomize-helm-mt"
 TARGET_PATH="apps/staging/ai-model"
 YAML_FILE_NAME="ai-model-deployment.yaml"
 COMMIT_MESSAGE="Add KAITO workspace for phi-3-mini-4k-instruct"
 REPO_OWNER="walterov"
+REPO_URL=https://${REPO_OWNER}:${GITOPS_PUSH_PAT}@github.com/${REPO_OWNER}/${REPO_DIR}.git
 
 # Use environment variable for GitHub token (in CI)
 # if [ -n "$GITOPS_PUSH_PAT" ]; then
@@ -20,7 +20,6 @@ REPO_OWNER="walterov"
 # === Clean and clone repo ===
 rm -rf $REPO_DIR
 git clone $REPO_URL
-git clone https://${REPO_OWNER}:${GITOPS_PUSH_PAT}@github.com/walterov/${REPO_DIR}.git
 
 cd $REPO_DIR
 
