@@ -178,6 +178,11 @@ jobs:
 
     - name: Run KAITO YAML generation script
       run: .github/scripts/gen-yaml.sh
+      env:
+        GITOPS_PUSH_PAT: ${{ secrets.GITOPS_PUSH_PAT }}
+
+    - name: Run KAITO YAML generation script
+      run: .github/scripts/gen-yaml.sh
   
   deploy-flex-extension:
     name: Deploy and Configure Flex Repo
