@@ -8,7 +8,7 @@ TARGET_PATH="apps/staging/ai-model"
 YAML_FILE_NAME="ai-model-deployment.yaml"
 COMMIT_MESSAGE="Add KAITO workspace for phi-3-mini-4k-instruct"
 REPO_OWNER="walterov"
-REPO_URL=https://${REPO_OWNER}:${GITOPS_PUSH_PAT}@github.com/${REPO_OWNER}/${REPO_NAME}.git
+REPO_URL="https://${REPO_OWNER}:${GITOPS_PUSH_PAT}@github.com/${REPO_OWNER}/${REPO_NAME}.git"
 
 # Use environment variable for GitHub token (in CI)
 if [ -z "${GITOPS_PUSH_PAT:-}" ]; then
