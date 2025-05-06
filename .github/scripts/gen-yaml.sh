@@ -36,6 +36,7 @@ cat <<EOF > "$OUTPUT_FILE"
 apiVersion: kaito.sh/v1alpha1
 kind: Workspace
 metadata:
+  namespace: ai-workspace
   name: workspace-phi-3-mini
 resource:
   labelSelector:
