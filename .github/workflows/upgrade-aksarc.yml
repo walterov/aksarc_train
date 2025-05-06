@@ -21,8 +21,46 @@ jobs:
     steps:
       - run: echo "Starting AKS Arc upgrade ..."
 
+  check-k8s-cluster-health:
+    name: Check the health of the AKS Arc cluster
+    runs-on: ubuntu-latest
+    needs: [enable-ui]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Azure authentication
+      uses: azure/login@v2
+      with:
+        creds: |
+          {
+            "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
+            "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
+            "tenantId": "${{ secrets.AZURE_TENANT_ID }}",
+            "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          }
+
+    - name: Install latest kubectl
+      run: |
+        echo "Installing latest kubectl..."
+        curl -LO "https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x kubectl
+        sudo mv kubectl /usr/local/bin/kubectl
+        kubectl version --client
+        
+    - name: Connect to AKS Arc cluster using az connectedk8s
+      run: |
+        echo "Starting kubectl proxy to AKS Arc..."
+        az extension add --name connectedk8s --yes
+        az connectedk8s proxy -n ${{ inputs.cluster-name }} -g ${{ inputs.resource-group }} &
+        sleep 10  # Give time for proxy to establish
+
+    - name: Run the check health script
+      run: .github/scripts/checkhealth.sh
+
   Upgrade-aksarc-cluster:
-    needs: enable-ui
+    needs: check-k8s-cluster-health
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
