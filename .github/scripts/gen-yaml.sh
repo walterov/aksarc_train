@@ -7,18 +7,21 @@ REPO_DIR="gitops-flux2-kustomize-helm-mt"
 TARGET_PATH="apps/staging/ai-model"
 YAML_FILE_NAME="ai-model-deployment.yaml"
 COMMIT_MESSAGE="Add KAITO workspace for phi-3-mini-4k-instruct"
+REPO_OWNER="walterov"
 
 # Use environment variable for GitHub token (in CI)
-if [ -n "$GITOPS_PUSH_PAT" ]; then
-  echo "Using GitHub token from environment for authentication"
-  git config --global credential.helper store
-  echo "https://walterov:${GITOPS_PUSH_PAT}@github.com" > ~/.git-credentials
-  chmod 600 ~/.git-credentials
-fi
+# if [ -n "$GITOPS_PUSH_PAT" ]; then
+#   echo "Using GitHub token from environment for authentication"
+#   git config --global credential.helper store
+#   echo "https://${REPO_OWNER}:${GITOPS_PUSH_PAT}@github.com" > ~/.git-credentials
+#   chmod 600 ~/.git-credentials
+# fi
 
 # === Clean and clone repo ===
 rm -rf $REPO_DIR
 git clone $REPO_URL
+git clone https://${REPO_OWNER}:${GITOPS_PUSH_PAT}@github.com/walterov/${REPO_DIR}.git
+
 cd $REPO_DIR
 
 # === Get nodes with label apps=llm-inference ===
