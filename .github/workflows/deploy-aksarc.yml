@@ -139,7 +139,7 @@ jobs:
   generate-kaito-workspace-yaml:
     name: Generate KAITO Workspace YAML
     runs-on: ubuntu-latest
-    needs: label-gpu-nodes
+    needs: [label-gpu-nodes]
 
     steps:
     - name: Checkout repository
@@ -182,7 +182,7 @@ jobs:
   deploy-flex-extension:
     name: Deploy and Configure Flex Repo
     runs-on: ubuntu-latest
-    needs: [deploy-aks-cluster]  # Ensure this runs after AKS deployment job
+    needs: [generate-kaito-workspace-yaml]  # Ensure this runs after kaito workspace job
 
     steps:
       - name: Checkout repository
