@@ -16,6 +16,9 @@ if [ -z "${GITOPS_PUSH_PAT:-}" ]; then
   exit 1
 fi
 
+# Automatically clean up the cloned repo when the script exits (success or error)
+trap 'rm -rf "$REPO_DIR"' EXIT
+
 # === Clean and clone repo ===
 rm -rf "$REPO_DIR"
 git clone "$REPO_URL"
@@ -56,8 +59,11 @@ git config user.name "GitOps Bot"
 git config user.email "gitops-bot@local"
 
 git add "$OUTPUT_FILE"
-git commit -m "$COMMIT_MESSAGE"
-git push origin main
-
-echo "✅ ${YAML_FILE_NAME} pushed to ${REPO_NAME}/apps/staging/ai-model/"
+if git diff --cached --quiet; then
+  echo "ℹ️ No changes to commit"
+else
+  git commit -m "$COMMIT_MESSAGE"
+  git push origin main
+  echo "✅ ${YAML_FILE_NAME} pushed to ${REPO_NAME}/apps/staging/ai-model/"
+fi
 
