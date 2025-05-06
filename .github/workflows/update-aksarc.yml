@@ -1,0 +1,30 @@
+name: Update AKS Arc Cluster Workflow
+run-name: ${{ github.actor }} is going to call deploy workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      cluster-name:
+        description: 'Name of the AKS Arc cluster'
+        required: true
+      resource-group:
+        description: 'Azure Resource Group'
+        required: true
+      custom-location:
+        description: 'Azure Local Custom Location'
+        required: true
+      k8s-version:
+        description: 'Kubernetes Version'
+        required: false
+        default: '1.30.4'
+
+jobs:
+  enable-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Starting AKS Arc deployment via reusable workflow..."
+
+  update-aksarc-cluster:
+    uses: 
+    needs: enable-ui
+    
