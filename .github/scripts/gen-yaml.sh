@@ -1,27 +1,26 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 # GitHub credentials
-REPO_DIR="gitops-flux2-kustomize-helm-mt"
+REPO_NAME="gitops-flux2-kustomize-helm-mt"
+REPO_DIR=$REPO_NAME
 TARGET_PATH="apps/staging/ai-model"
 YAML_FILE_NAME="ai-model-deployment.yaml"
 COMMIT_MESSAGE="Add KAITO workspace for phi-3-mini-4k-instruct"
 REPO_OWNER="walterov"
-REPO_URL=https://${REPO_OWNER}:${GITOPS_PUSH_PAT}@github.com/${REPO_OWNER}/${REPO_DIR}.git
+REPO_URL=https://${REPO_OWNER}:${GITOPS_PUSH_PAT}@github.com/${REPO_OWNER}/${REPO_NAME}.git
 
 # Use environment variable for GitHub token (in CI)
-# if [ -n "$GITOPS_PUSH_PAT" ]; then
-#   echo "Using GitHub token from environment for authentication"
-#   git config --global credential.helper store
-#   echo "https://${REPO_OWNER}:${GITOPS_PUSH_PAT}@github.com" > ~/.git-credentials
-#   chmod 600 ~/.git-credentials
-# fi
+if [ -z "${GITOPS_PUSH_PAT:-}" ]; then
+  echo "❌ GITOPS_PUSH_PAT is not set"
+  exit 1
+fi
 
 # === Clean and clone repo ===
-rm -rf $REPO_DIR
-git clone $REPO_URL
+rm -rf "$REPO_DIR"
+git clone "$REPO_URL"
 
-cd $REPO_DIR
+cd "$REPO_DIR"
 
 # === Get nodes with label apps=llm-inference ===
 NODE_NAMES=$(kubectl get nodes -l apps=llm-inference -o jsonpath='{.items[*].metadata.name}')
@@ -60,5 +59,5 @@ git add "$OUTPUT_FILE"
 git commit -m "$COMMIT_MESSAGE"
 git push origin main
 
-echo "${YAML_FILE_NAME} pushed to GitHub in ${REPO_URL}/tree/main/${TARGET_PATH}"
+echo "✅ ${YAML_FILE_NAME} pushed to ${REPO_NAME}/apps/staging/ai-model/"
 
