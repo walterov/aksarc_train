@@ -134,6 +134,8 @@ jobs:
           for NODE in $GPU_NODES; do
             echo "Labeling node $NODE with app=llm-inference..."
             kubectl label node "$NODE" app=llm-inference --overwrite
+            echo "Labeling node $NODE with apps=llm-inference..."
+            kubectl label node "$NODE" apps=llm-inference --overwrite
           done
 
           echo "Labeling complete."
