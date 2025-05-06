@@ -57,7 +57,9 @@ jobs:
         sleep 10  # Give time for proxy to establish
 
     - name: Run the check health script
-      run: .github/scripts/checkhealth.sh
+      run: |
+        chmod +x .github/scripts/checkhealth.sh
+        .github/scripts/checkhealth.sh
 
   Upgrade-aksarc-cluster:
     needs: check-k8s-cluster-health
