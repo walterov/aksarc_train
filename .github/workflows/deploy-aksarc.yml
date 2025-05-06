@@ -53,7 +53,7 @@ jobs:
 
       - name: Upgrade Azure CLI
         run: |
-          az upgrade
+          az upgrade --yes
 
       - name: Write SSH Public Key file
         run: |
