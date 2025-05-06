@@ -5,7 +5,7 @@ set -e
 REPO_URL="https://github.com/walterov/gitops-flux2-kustomize-helm-mt.git"
 REPO_DIR="gitops-flux2-kustomize-helm-mt"
 TARGET_PATH="apps/staging/ai-model"
-YAML_FILE_NAME="workspace.yaml"
+YAML_FILE_NAME="ai-model-deployment.yaml"
 COMMIT_MESSAGE="Add KAITO workspace for phi-3-mini-4k-instruct"
 
 # Use environment variable for GitHub token (in CI)
@@ -58,5 +58,5 @@ git add "$OUTPUT_FILE"
 git commit -m "$COMMIT_MESSAGE"
 git push origin main
 
-echo "workspace.yaml pushed to GitHub in ${REPO_URL}/tree/main/${TARGET_PATH}"
+echo "${YAML_FILE_NAME} pushed to GitHub in ${REPO_URL}/tree/main/${TARGET_PATH}"
 
