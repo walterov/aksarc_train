@@ -90,4 +90,5 @@ jobs:
           az aksarc upgrade \
             --name ${{ inputs.cluster-name }} \
             --resource-group ${{ inputs.resource-group }} \
-            --kubernetes-version "${{ inputs.k8s-version }}"    
+            --kubernetes-version "${{ inputs.k8s-version }}" \
+            --yes
