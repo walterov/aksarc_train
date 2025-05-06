@@ -1,4 +1,4 @@
-name: Update AKS Arc Cluster Workflow
+name: Upgrade AKS Arc Cluster Workflow
 run-name: ${{ github.actor }} is going to call deploy workflow
 
 on:
@@ -10,9 +10,6 @@ on:
       resource-group:
         description: 'Azure Resource Group'
         required: true
-      custom-location:
-        description: 'Azure Local Custom Location'
-        required: true
       k8s-version:
         description: 'Kubernetes Version'
         required: false
@@ -22,9 +19,9 @@ jobs:
   enable-ui:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Starting AKS Arc deployment via reusable workflow..."
+      - run: echo "Starting AKS Arc upgrade ..."
 
-  update-aksarc-cluster:
+  Upgrade-aksarc-cluster:
     needs: enable-ui
     runs-on: ubuntu-latest
     steps:
@@ -47,11 +44,10 @@ jobs:
         run: |
           az upgrade --yes
 
-      - name: Update AKS Arc Cluster
+      - name: Upgrade AKS Arc Cluster
         run: |
           az extension add --name aksarc
-          az aksarc update \
+          az aksarc upgrade \
             --name ${{ inputs.cluster-name }} \
             --resource-group ${{ inputs.resource-group }} \
-            --custom-location ${{ inputs.custom-location }} \
             --kubernetes-version "${{ inputs.k8s-version }}"    
