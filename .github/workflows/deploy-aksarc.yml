@@ -186,7 +186,7 @@ jobs:
         GITOPS_PUSH_PAT: ${{ secrets.GITOPS_PUSH_PAT }}
   
   deploy-flex-extension:
-    name: Deploy and Configure Flex Repo
+    name: Deploy Flex and Configure Repo
     runs-on: ubuntu-latest
     needs: [generate-kaito-workspace-yaml]  # Ensure this runs after kaito workspace job
 
