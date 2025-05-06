@@ -1,27 +1,19 @@
 #!/bin/bash
+set -e
 
-set -e  # Exit on error
-
-# GitHub repo details
+# GitHub credentials
 REPO_URL="https://github.com/walterov/gitops-flux2-kustomize-helm-mt.git"
 REPO_DIR="gitops-flux2-kustomize-helm-mt"
 TARGET_PATH="apps/staging/ai-model"
-YAML_FILE_NAME="ai-model-deployment.yaml"
+YAML_FILE_NAME="workspace.yaml"
 COMMIT_MESSAGE="Add KAITO workspace for phi-3-mini-4k-instruct"
 
-# === Prompt for GitHub username and token (if ~/.git-credentials doesn't exist) ===
-if [ ! -f ~/.git-credentials ]; then
-  echo "GitHub authentication is required to push changes."
-  read -p "Enter your GitHub username: " GH_USER
-  read -s -p "Enter your GitHub Personal Access Token (PAT): " GH_TOKEN
-  echo
-  echo "Storing credentials for future use..."
-
-  echo "https://${GH_USER}:${GH_TOKEN}@github.com" > ~/.git-credentials
-  chmod 600 ~/.git-credentials
-
-  # Configure Git to use credential store
+# Use environment variable for GitHub token (in CI)
+if [ -n "$GITOPS_PUSH_PAT" ]; then
+  echo "Using GitHub token from environment for authentication"
   git config --global credential.helper store
+  echo "https://walterov:${GITOPS_PUSH_PAT}@github.com" > ~/.git-credentials
+  chmod 600 ~/.git-credentials
 fi
 
 # === Clean and clone repo ===
