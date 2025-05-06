@@ -55,9 +55,6 @@ inference:
 EOF
 
 # === Git commit and push ===
-git config user.name "GitOps Bot"
-git config user.email "gitops-bot@local"
-
 git add "$OUTPUT_FILE"
 if git diff --cached --quiet; then
   echo "ℹ️ No changes to commit"
