@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 HEALTHY="the cluster is healthy"
 UNHEALTHY="the cluster is not healthy"
 FAILED_CHECKS=""
