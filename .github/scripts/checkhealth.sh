@@ -17,8 +17,8 @@ fi
 
 # Check pods status in all namespaces
 echo "Checking pods..."
-BAD_PODS=$(kubectl get pods --all-namespaces -o jsonpath='{.items[?(@.status.phase!="Running" && @.status.phase!=\"Succeeded\")]..metadata.name}' | wc -w)
-BAD_POD_NAMES=$(kubectl get pods --all-namespaces -o jsonpath='{.items[?(@.status.phase!="Running" && @.status.phase!=\"Succeeded\")]..metadata.namespace}/{.items[?(@.status.phase!="Running" && @.status.phase!=\"Succeeded\")]..metadata.name}' | tr ' ' '\n')
+BAD_PODS=$(kubectl get pods --all-namespaces -o jsonpath='{.items[?(@.status.phase!="Running" && @.status.phase!="Succeeded")]..metadata.name}' | wc -w)
+BAD_POD_NAMES=$(kubectl get pods --all-namespaces -o jsonpath='{.items[?(@.status.phase!="Running" && @.status.phase!="Succeeded")]..metadata.namespace}/{.items[?(@.status.phase!="Running" && @.status.phase!="Succeeded")]..metadata.name}' | tr ' ' '\n')
 
 if [ "$BAD_PODS" -gt 0 ]; then
   IS_HEALTHY=false
