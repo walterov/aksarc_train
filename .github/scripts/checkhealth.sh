@@ -17,14 +17,14 @@ if [ "$UNREADY_NODES" -gt 0 ]; then
   FAILED_CHECKS="$FAILED_CHECKS\n- Nodes are not all ready ($UNREADY_NODES unready)"
 fi
 
-# Check pods status in all namespaces
+# Check pods status in all namespaces using jq
 echo "Checking pods..."
-BAD_PODS=$(kubectl get pods --all-namespaces -o jsonpath='{.items[?(@.status.phase!="Running" && @.status.phase!="Succeeded")]..metadata.name}' | wc -w)
-BAD_POD_NAMES=$(kubectl get pods --all-namespaces -o jsonpath='{.items[?(@.status.phase!="Running" && @.status.phase!="Succeeded")]..metadata.namespace}/{.items[?(@.status.phase!="Running" && @.status.phase!="Succeeded")]..metadata.name}' | tr ' ' '\n')
+UNHEALTHY_PODS=$(kubectl get pods --all-namespaces -o json | jq -r '.items[] | select(.status.phase != "Running" and .status.phase != "Succeeded") | .metadata.namespace + "/" + .metadata.name' | wc -l)
+UNHEALTHY_POD_NAMES=$(kubectl get pods --all-namespaces -o json | jq -r '.items[] | select(.status.phase != "Running" and .status.phase != "Succeeded") | .metadata.namespace + "/" + .metadata.name')
 
-if [ "$BAD_PODS" -gt 0 ]; then
+if [ "$UNHEALTHY_PODS" -gt 0 ]; then
   IS_HEALTHY=false
-  FAILED_CHECKS="$FAILED_CHECKS\n- $BAD_PODS pods are not in Running or Succeeded state:\n$BAD_POD_NAMES"
+  FAILED_CHECKS="$FAILED_CHECKS\n- $UNHEALTHY_PODS pods are not in Running or Succeeded state:\n$UNHEALTHY_POD_NAMES"
 fi
 
 # Check deployments availability
