@@ -40,7 +40,10 @@ jobs:
             "tenantId": "${{ secrets.AZURE_TENANT_ID }}",
             "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
           }
-
+    - name: Install jq
+      run: |
+        sudo apt-get update && sudo apt-get install -y jq
+        
     - name: Install latest kubectl
       run: |
         echo "Installing latest kubectl..."
