@@ -22,16 +22,16 @@ echo "[INFO] Checking cluster node health..."
 UNREADY_NODES=$(kubectl get nodes -o json | jq '[.items[] | select(.status.conditions[] | select(.type=="Ready" and .status!="True"))] | length')
 
 if [ "$UNREADY_NODES" -eq 0 ]; then
-    echo "[INFO] All nodes are healthy."
+  echo "[INFO] All nodes are healthy."
 else
-    echo "[ERROR] Cluster has $UNREADY_NODES unready node(s)."
-    echo "the cluster is not healthy"
-    exit 1
+  echo "[ERROR] Cluster has $UNREADY_NODES unready node(s)."
+  echo "the cluster is not healthy"
+  exit 1
 fi
 
 # Check pods status in all namespaces using jq
 echo "Checking pods..."
-UNHEALTHY_PODS=$(kubectl get pods --all-namespaces -o json | jq -r '.items[] | select(.status.phase != "Running" and .status.phase != "Succeeded") | .metadata.namespace + "/" + .metadata.name' | wc -l)
+UNHEALTHY_PODS=$(kubectl get pods --all-namespaces -o json | jq -r '.items[] | select(.status.phase != "Running" and .status.phase != "Succeeded") | .metadata.namespace + "/" + .metadata.name')
 UNHEALTHY_POD_NAMES=$(kubectl get pods --all-namespaces -o json | jq -r '.items[] | select(.status.phase != "Running" and .status.phase != "Succeeded") | .metadata.namespace + "/" + .metadata.name')
 
 debug "UNHEALTHY_PODS: $UNHEALTHY_PODS"
@@ -45,7 +45,7 @@ fi
 # Check deployments availability
 echo "Checking deployments..."
 UNAVAILABLE_DEPLOYMENTS=$(kubectl get deployments --all-namespaces -o jsonpath='{.items[?(@.status.availableReplicas!=@.spec.replicas)].metadata.name}' | wc -w)
-UNAVAILABLE_DEPLOYMENT_NAMES=$(kubectl get deployments --all-namespaces -o jsonpath='{.items[?(@.status.availableReplicas!=@.spec.replicas)].metadata.namespace}/{.items[?(@.status.availableReplicas!=@.spec.replicas)].metadata.name}' | tr ' ' '\n')
+UNAVAILABLE_DEPLOYMENT_NAMES=$(kubectl get deployments --all-namespaces -o jsonpath='{.items[?(@.status.availableReplicas!=@.spec.replicas)].metadata.namespace}/{.items[?(@.status.availableReplicas!=@.spec.replicas)].metadata.name}')
 
 debug "UNAVAILABLE_DEPLOYMENTS: $UNAVAILABLE_DEPLOYMENTS"
 debug "UNAVAILABLE_DEPLOYMENT_NAMES: $UNAVAILABLE_DEPLOYMENT_NAMES"
@@ -58,7 +58,7 @@ fi
 # Check statefulsets availability
 echo "Checking statefulsets..."
 UNAVAILABLE_STATEFULSETS=$(kubectl get statefulsets --all-namespaces -o jsonpath='{.items[?(@.status.readyReplicas!=@.spec.replicas)].metadata.name}' | wc -w)
-UNAVAILABLE_STATEFULSET_NAMES=$(kubectl get statefulsets --all-namespaces -o jsonpath='{.items[?(@.status.readyReplicas!=@.spec.replicas)].metadata.namespace}/{.items[?(@.status.readyReplicas!=@.spec.replicas)].metadata.name}' | tr ' ' '\n')
+UNAVAILABLE_STATEFULSET_NAMES=$(kubectl get statefulsets --all-namespaces -o jsonpath='{.items[?(@.status.readyReplicas!=@.spec.replicas)].metadata.namespace}/{.items[?(@.status.readyReplicas!=@.spec.replicas)].metadata.name}')
 
 debug "UNAVAILABLE_STATEFULSETS: $UNAVAILABLE_STATEFULSETS"
 debug "UNAVAILABLE_STATEFULSET_NAMES: $UNAVAILABLE_STATEFULSET_NAMES"
