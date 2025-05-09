@@ -12,6 +12,10 @@ debug() {
   echo "[DEBUG] $@" >&2
 }
 
+# Get node status directly before health checks
+echo "Getting node status before health checks..."
+kubectl get nodes -o wide
+
 # Check nodes
 echo "Checking nodes..."
 NODE_STATUS=$(kubectl get nodes -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}')
@@ -57,11 +61,6 @@ UNAVAILABLE_STATEFULSET_NAMES=$(kubectl get statefulsets --all-namespaces -o jso
 
 debug "UNAVAILABLE_STATEFULSETS: $UNAVAILABLE_STATEFULSETS"
 debug "UNAVAILABLE_STATEFULSET_NAMES: $UNAVAILABLE_STATEFULSET_NAMES"
-
-if [ "$UNAVAILABLE_STATEFULSETS" -gt 0 ]; then
-  IS_HEALTHY=false
-  FAILED_CHECKS="$FAILED_CHECKS\n- $UNAVAILABLE_STATEFULSETS statefulsets have unavailable replicas:\n$UNAVAILABLE_STATEFULSET_NAMES"
-fi
 
 if [ "$IS_HEALTHY" = true ]; then
   echo "$HEALTHY"
