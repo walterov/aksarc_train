@@ -1,5 +1,5 @@
 name: Upgrade AKS Arc Cluster Workflow
-run-name: ${{ github.actor }} is going to call deploy workflow
+run-name: ${{ github.actor }} is upgrading AKS Arc cluster ${{ inputs.cluster-name }}
 
 on:
   workflow_dispatch:
