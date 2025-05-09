@@ -20,6 +20,11 @@ on:
         description: 'Kubernetes Version'
         required: false
         default: '1.30.4'
+      environment: # Added input parameter
+        description: 'Choose deployment environment: production or staging'
+        required: true
+        type: string
+        default: 'production'
 
 jobs:
   enable-ui:
@@ -36,6 +41,7 @@ jobs:
       custom-location: ${{ github.event.inputs.custom-location }}
       vnet-id: ${{ github.event.inputs.vnet-id }}
       k8s-version: ${{ github.event.inputs.k8s-version }}
+      environment: ${{ github.event.inputs.environment }}
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
