@@ -241,9 +241,9 @@ jobs:
               exit 1
               ;;
           esac
-          
-      - name: Pick environment selection 
-        run: |     
+ 
+      - name: Deploy the microsoft.flux extension to the cluster and create the Flux configuration 
+        run: |
           # Set Kustomize path based on input
           if [ ${{ inputs.environment }} = "production" ]; then
             KUSTOMIZE_PATH="./apps/production"
@@ -256,8 +256,7 @@ jobs:
             KUSTOMIZE_PATH="apps/production" # added default
           fi
 
-      - name: Deploy the microsoft.flux extension to the cluster and create the Flux configuration 
-        run: |
+          # Create flux config for the cluster
           az k8s-configuration flux create \
             --resource-group ${{ inputs.resource-group }} \
             --cluster-name ${{ inputs.cluster-name }} \
