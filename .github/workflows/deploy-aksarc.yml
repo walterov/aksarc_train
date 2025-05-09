@@ -19,6 +19,17 @@ on:
         required: false
         type: string
         default: "1.30.4"
+      git_ref:
+        description: 'Git branch or tag to deploy'
+        required: true
+        type: string
+        default: 'main'
+      environment: # Added input parameter
+        description: 'Choose deployment environment: production or staging'
+        required: true
+        type: string
+        default: 'production'
+        
     secrets:
       AZURE_CLIENT_ID:
         required: true
@@ -184,7 +195,7 @@ jobs:
       run: .github/scripts/gen-yaml.sh
       env:
         GITOPS_PUSH_PAT: ${{ secrets.GITOPS_PUSH_PAT }}
-  
+
   deploy-flex-extension:
     name: Deploy Flex and Configure Repo
     runs-on: ubuntu-latest
@@ -218,6 +229,33 @@ jobs:
           az extension update -n k8s-configuration
           az extension update -n k8s-extension
 
+
+      - name: Validate environment input
+        run: |
+          case "${{ inputs.environment }}" in
+            production|staging)
+              echo "Valid environment: ${{ inputs.environment }}"
+              ;;
+            *)
+              echo "Invalid environment: ${{ inputs.environment }}"
+              exit 1
+              ;;
+          esac
+          
+      - name: Pick environment selection 
+        run: |     
+          # Set Kustomize path based on input
+          if [ ${{ inputs.environment }} = "production" ]; then
+            KUSTOMIZE_PATH="./apps/production"
+            echo "Kustomize path: apps/production to cluster: $CLUSTER"
+          elif [ ${{ inputs.environment }} = "staging" ]; then
+            KUSTOMIZE_PATH="./apps/staging"
+            echo "Kustomize path: apps/staging to cluster: $CLUSTER"
+          else
+            echo "Invalid deployment type.  Defaulting to production"
+            KUSTOMIZE_PATH="apps/production" # added default
+          fi
+
       - name: Deploy the microsoft.flux extension to the cluster and create the Flux configuration 
         run: |
           az k8s-configuration flux create \
@@ -230,7 +268,7 @@ jobs:
             --url https://github.com/walterov/gitops-flux2-kustomize-helm-mt \
             --branch main \
             --kustomization name=infra path=./infrastructure prune=true \
-            --kustomization name=apps path=./apps/staging prune=true dependsOn=\["infra"\]
+            --kustomization name=apps path=$KUSTOMIZE_PATH prune=true dependsOn=\["infra"\]
 
 
 
