@@ -20,6 +20,11 @@ on:
         description: 'Kubernetes Version'
         required: false
         default: '1.30.4'
+      git_ref:
+        description: 'Git branch or tag to deploy'
+        required: true
+        type: string
+        default: 'main'
       environment: # Added input parameter
         description: 'Choose deployment environment: production or staging'
         required: true
@@ -41,6 +46,7 @@ jobs:
       custom-location: ${{ github.event.inputs.custom-location }}
       vnet-id: ${{ github.event.inputs.vnet-id }}
       k8s-version: ${{ github.event.inputs.k8s-version }}
+      git_ref: ${{ github.event.inputs.git_ref }}
       environment: ${{ github.event.inputs.environment }}
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
