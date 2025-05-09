@@ -16,16 +16,17 @@ debug() {
 echo "Getting node status before health checks..."
 kubectl get nodes -o wide
 
-# Check nodes
-echo "Checking nodes..."
-NODE_STATUS=$(kubectl get nodes -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}')
-UNREADY_NODES=$(echo "$NODE_STATUS" | grep -vc "True" | wc -l) # Use wc -l for count
+echo "[INFO] Checking cluster node health..."
 
-debug "UNREADY_NODES: $UNREADY_NODES"
+# Get the number of nodes not in Ready state
+UNREADY_NODES=$(kubectl get nodes -o json | jq '[.items[] | select(.status.conditions[] | select(.type=="Ready" and .status!="True"))] | length')
 
-if [ "$UNREADY_NODES" -gt 0 ]; then
-  IS_HEALTHY=false
-  FAILED_CHECKS="$FAILED_CHECKS\n- Nodes are not all ready ($UNREADY_NODES unready)"
+if [ "$UNREADY_NODES" -eq 0 ]; then
+    echo "[INFO] All nodes are healthy."
+else
+    echo "[ERROR] Cluster has $UNREADY_NODES unready node(s)."
+    echo "the cluster is not healthy"
+    exit 1
 fi
 
 # Check pods status in all namespaces using jq
