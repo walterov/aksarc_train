@@ -55,3 +55,4 @@ jobs:
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
       GITOPS_PUSH_PAT: ${{ secrets.GITOPS_PUSH_PAT }}
+      AZURE_AD_ADMIN_GROUP_ID: ${{ secrets.AZURE_AD_ADMIN_GROUP_ID }}
