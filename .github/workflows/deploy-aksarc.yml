@@ -43,6 +43,8 @@ on:
         required: true
       GITOPS_PUSH_PAT:
         required: true
+      AZURE_AD_ADMIN_GROUP_ID:
+        required: true
 
 jobs:
   deploy-aks-cluster:
